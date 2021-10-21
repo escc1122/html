@@ -47,7 +47,7 @@
 		  // Activate the webcam stream.
 		  navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
 			video.srcObject = stream;
-			video.addEventListener('loadeddata', main);
+			video.addEventListener('loadeddata', aaa);
 		  });
 		}
 
@@ -77,7 +77,7 @@
 		
 		async function aaa(){
 			let now_time = new Date().getTime();
-			if (now_time-start_time){
+			if (now_time-start_time>3000){
 				start_time = now_time;
 				main();
 			}
