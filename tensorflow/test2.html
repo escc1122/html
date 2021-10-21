@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>al_test</title>
+
+</head>
+<body>
+<video id="webcam" autoplay muted width="640" height="480"></video>
+
+
+<canvas id="myCanvas" width="640" height="480"></canvas>
+
+
+
+<!-- Import TensorFlow.js library -->
+
+<script src="https://unpkg.com/@tensorflow/tfjs-core@2.1.0/dist/tf-core.js"></script>
+<script src="https://unpkg.com/@tensorflow/tfjs-converter@2.1.0/dist/tf-converter.js"></script>
+
+<!-- You must explicitly require a TF.js backend if you're not using the tfs union bundle. -->
+<script src="https://unpkg.com/@tensorflow/tfjs-backend-webgl@2.1.0/dist/tf-backend-webgl.js"></script>
+<!-- Alternatively you can use the WASM backend: <script src="https://unpkg.com/@tensorflow/tfjs-backend-wasm@2.1.0/dist/tf-backend-wasm.js"></script> -->
+
+<script src="https://unpkg.com/@tensorflow-models/handpose@0.0.6/dist/handpose.js"></script>
+<!-- Import the page's JavaScript to do some stuff -->
+<!--  <script src="script.js" defer></script> -->
+<script>
+		const video = document.getElementById('webcam');
+		const myCanvas = document.getElementById('myCanvas');
+
+		// Check if webcam access is supported.
+		function getUserMediaSupported() {
+		  return !!(navigator.mediaDevices &&
+			navigator.mediaDevices.getUserMedia);
+		}
+
+		// If webcam supported, add event listener to button for when user
+		// wants to activate it to call enableCam function which we will
+		// define in the next step.
+		if (getUserMediaSupported()) {
+		  enableCam()
+		} else {
+		  console.warn('getUserMedia() is not supported by your browser');
+		}
+
+		// Placeholder function for next step. Paste over this in the next step.
+		// Enable the live webcam view and start classification.
+		function enableCam() {
+		  // getUsermedia parameters to force video but not audio.
+		  const constraints = {
+			video: true
+		  };
+		  // Activate the webcam stream.
+		  navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
+			video.srcObject = stream;
+			video.addEventListener('loadeddata', aaa);
+		  });
+		}
+
+		// Placeholder function for next step.
+		//function predictWebcam() {
+			//console.log("al_test");
+			//requestAnimationFrame(()=>{predictWebcam()});
+		//}
+		
+		let start_time = new Date().getTime();
+		
+		const getFrameFromVideo = (video, canvas) => {
+			const ctx = canvas.getContext("2d");
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.save();   //儲存狀態
+			ctx.translate(video.width, 0);
+			ctx.scale(-1, 1);
+			ctx.drawImage(video, 0, 0, video.width, video.height);
+			ctx.restore(); //到此才輸出，才不會還沒整體操作完就放出，會造成畫面快速抖動
+		};
+				
+		
+		//================================================================================
+		let model;
+		
+		
+		async function aaa(){
+			let now_time = new Date().getTime();
+			if (now_time-start_time>1000){
+				start_time = now_time;
+				main();
+			}
+			requestAnimationFrame(aaa);
+		}
+		
+		async function main() {
+		  // Load the model.
+		  if (!model){
+			model = await handpose.load();
+		  }
+		  // Pass in an image or video to the model. The model returns an array of
+		  // bounding boxes, probabilities, and landmarks, one for each detected face.
+
+		  const returnTensors = false; // Pass in `true` to get tensors back, rather than values.
+		  const predictions = await model.estimateFaces(video, returnTensors);
+
+		  if (predictions.length > 0) {		
+			//const 手指關節 = {
+			//	拇指：[0, 1, 2, 3, 4],
+			//	索引手指：[0, 5, 6, 7, 8],
+			//	中指：[0, 9, 10, 11, 12],
+			//	無名指：[0, 13, 14, 15, 16],
+			//	小指：[0, 17, 18, 19, 20],
+			//  };
+			
+			for (let i = 0; i < predictions.length; i++) {
+			  const keypoints = predictions[i].landmarks;
+
+			  // Log hand keypoints.
+			  const a = [8, 7, 6, 5, 0];
+			  const b = [16, 15, 14, 13, 0];
+			  let isYA = false;
+			  let c1 = false;
+			  
+			  if (keypoints[8][1]>keypoints[7][1] && keypoints[7][1]>keypoints[6][1] && keypoints[6][1]>keypoints[5][1] && keypoints[5][1]>keypoints[0][1]){
+				c1 = true;
+			  }
+			  if (keypoints[16][1]>keypoints[15][1] && keypoints[15][1]>keypoints[14][1] && keypoints[14][1]>keypoints[13][1] && keypoints[13][1]>keypoints[0][1]){
+				c2 = true;
+			  }
+			  
+			  
+			  if (c1 && c2){
+				getFrameFromVideo(video,myCanvas);
+			  }
+			}
+			
+			
+			
+			
+			
+			
+		  }
+		}
+
+
+	</script>
+</body>
+</html>
