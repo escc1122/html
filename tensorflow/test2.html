@@ -112,16 +112,13 @@
 			for (let i = 0; i < predictions.length; i++) {
 			  const keypoints = predictions[i].landmarks;
 
-			  // Log hand keypoints.
-			  const a = [8, 7, 6, 5, 0];
-			  const b = [16, 15, 14, 13, 0];
-			  let isYA = false;
 			  let c1 = false;
+			  let c2 = false;
 			  
 			  if (keypoints[8][1]>keypoints[7][1] && keypoints[7][1]>keypoints[6][1] && keypoints[6][1]>keypoints[5][1] && keypoints[5][1]>keypoints[0][1]){
 				c1 = true;
 			  }
-			  if (keypoints[16][1]>keypoints[15][1] && keypoints[15][1]>keypoints[14][1] && keypoints[14][1]>keypoints[13][1] && keypoints[13][1]>keypoints[0][1]){
+			  if (keypoints[12][1]>keypoints[11][1] && keypoints[11][1]>keypoints[10][1] && keypoints[10][1]>keypoints[9][1] && keypoints[9][1]>keypoints[0][1]){
 				c2 = true;
 			  }
 			  
