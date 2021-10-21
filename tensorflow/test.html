@@ -60,25 +60,29 @@
 		let start_time = new Date().getTime();
 		
 		const getFrameFromVideo = (video, canvas , a ,b ,c, d) => {
-			let now_time = new Date().getTime();
-			if (now_time-start_time){
-				start_time = now_time;
-				const ctx = canvas.getContext("2d");
-				ctx.clearRect(0, 0, canvas.width, canvas.height);
-				ctx.save();   //儲存狀態
-				ctx.translate(video.width, 0);
-				ctx.scale(-1, 1);
-				ctx.drawImage(video, 0, 0, video.width, video.height);
-				ctx.fillRect(a, b, c, d);
-				ctx.restore(); //到此才輸出，才不會還沒整體操作完就放出，會造成畫面快速抖動
-			}
-			//requestAnimationFrame(() => getFrameFromVideo(video, canvas));
-			
+			const ctx = canvas.getContext("2d");
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.save();   //儲存狀態
+			ctx.translate(video.width, 0);
+			ctx.scale(-1, 1);
+			ctx.drawImage(video, 0, 0, video.width, video.height);
+			ctx.fillRect(a, b, c, d);
+			ctx.restore(); //到此才輸出，才不會還沒整體操作完就放出，會造成畫面快速抖動
 		};
 				
 		
 		//================================================================================
-		const model;
+		let model;
+		
+		
+		async function aaa(){
+			let now_time = new Date().getTime();
+			if (now_time-start_time){
+				start_time = now_time;
+				main();
+			}
+			requestAnimationFrame(aaa);
+		}
 		
 		async function main() {
 		  // Load the model.
