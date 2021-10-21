@@ -98,7 +98,7 @@
 		  // bounding boxes, probabilities, and landmarks, one for each detected face.
 
 		  const returnTensors = false; // Pass in `true` to get tensors back, rather than values.
-		  const predictions = await model.estimateFaces(video, returnTensors);
+		  const predictions = await model.estimateHands(video);
 
 		  if (predictions.length > 0) {		
 			//const 手指關節 = {
