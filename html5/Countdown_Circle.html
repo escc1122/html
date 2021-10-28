@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            @keyframes countDown {
+                to {
+                    stroke-dasharray: 100 100;
+                }
+            }
+            body{
+                width: 100vw;
+                height: 100vw;
+            }
+
+            .group{
+                position: relative;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%,-50%);
+            }
+
+            svg {
+                margin: auto;
+                display: block;
+                background-color: gold;
+                border-radius: 50%;
+                height: auto;
+                max-width: 100%;
+                transform: rotate(-90deg);
+                width: 250px;
+            }
+            svg .svg-outer-circle {
+                fill: none;
+                stroke-dasharray: 0 100;
+                stroke-width: 32;
+                stroke: #ccc;
+                animation: countDown 3s linear forwards;
+            }
+            svg .svg-inner-circle {
+                box-shadow: inset 0px 0px 0px 2px #ffffff;
+                fill: #fff;
+            }
+
+
+
+        </style>
+    </head>
+<body>
+    <div class="group">
+        <svg viewbox="0 0 64 64">
+            <circle class="svg-outer-circle" r="25%" cx="50%" cy="50%"></circle>
+            <circle class="svg-inner-circle" r="42.5%" cx="50%" cy="50%"></circle>
+        </svg>
+    </div>
+</body>
+</html>
